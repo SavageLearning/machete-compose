@@ -1,0 +1,44 @@
+version: "3"
+services:
+# # docker run -it --name machete --net=host --env-file machete1env.list ndlonmachete/debian:1.14.{build}
+# # --net=host is left over from the last configuration; this would be a change:
+  machete:
+    image: "ndlonmachete/debian:1.14.267"
+    env_file: "./machete1env.list"
+    networks:  
+      - machete-bridge
+    volumes:
+      - "app-secrets:/app/certs"
+    tty: true
+    stdin_open: true
+# # docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=passw0rD!' --network bridge -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server
+# # https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash#pullandrun2017
+# # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-2017#persist
+# # prod is on 2017-CU16-ubuntu at time of switch, this would be an upgrade
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+    environment:
+      SA_PASSWORD: "passw0rD!"
+      ACCEPT_EULA: "Y"
+    networks:
+      - machete-bridge
+    ports:
+      - 1433:1433
+    volumes: 
+      - "sql-databases:/var/opt/mssql/data"
+      - "app-secrets:/var/opt/mssql/certs"
+      - "sql-database-backups:/var/opt/mssql/backups"
+networks:
+  machete-bridge:
+    driver: bridge
+# # https://docs.docker.com/storage/volumes/ <~ opts are under --mounts (type, source, destination, etc.)
+# # sql-databases opts 'src=/mnt/databases' <~ comment leftover from Chef, not sure if it really applies to anything
+volumes:
+  app-secrets: 
+  sql-database-backups: 
+  sql-database-restore: 
+  sql-databases: 
