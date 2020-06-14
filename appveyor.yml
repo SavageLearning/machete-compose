@@ -1,0 +1,29 @@
+# https://www.appveyor.com/docs/appveyor-yml/
+# https://www.appveyor.com/docs/getting-started-with-appveyor-for-linux/
+
+version: 0.1.{build}
+
+branches:
+  only:
+    - master
+    - fix_pipeline
+
+skip_tags: true
+
+max_jobs: 1
+
+image: Ubuntu1804
+
+environment:
+  DOCKER_PASSWORD:
+    secure: N9RRZVl+qqgkpnnDWw2IF40PIFwcE9CC6txds30jgkl3f4T7JKYqjns9s+bHuFCM
+
+build_script:
+  - sh: docker build -f ./base/Dockerfile -t ndlonmachete/debian-base:0.1.13 ./base
+  - sh: docker build -f ./backups/Dockerfile -t ndlonmachete/azure-storage-fuse:0.0.2 ./backups
+  - sh: docker images
+
+# "secure variables are not decrypted for pull request builds"
+# after_build:
+#   - sh: docker login -u chaim1221 -p ${DOCKER_PASSWORD}
+#   - sh:  if [ $? -eq 0 ]; then docker push ndlonmachete/debian-base:$APPVEYOR_BUILD_VERSION; fi
