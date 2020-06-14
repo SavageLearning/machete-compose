@@ -1,1 +1,2 @@
-machete1env.list
+# secrets files
+*.list
