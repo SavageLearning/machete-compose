@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
 # # docker run -it --name machete --net=host --env-file machete1env.list ndlonmachete/debian:1.14.{build}
 # # --net=host is left over from the last configuration; this would be a change:
@@ -40,13 +40,16 @@ services:
 # # prod is on 2017-CU16-ubuntu at time of switch, this would be an upgrade
   sqlserver:
     image: "mcr.microsoft.com/mssql/server:2017-latest"
-    deploy:
-      resources:
-        limits:
-          memory: 5G
+# # v3
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 5G
     environment:
       SA_PASSWORD: "passw0rD!"
       ACCEPT_EULA: "Y"
+# # v2
+    mem_limit: 5G
     networks:
       - machete-bridge
     ports:
