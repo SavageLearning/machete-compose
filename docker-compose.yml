@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
 # # docker run -it --name machete --net=host --env-file machete1env.list ndlonmachete/debian:1.14.{build}
 # # --net=host is left over from the last configuration; this would be a change:
