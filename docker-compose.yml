@@ -1,3 +1,5 @@
+# version of docker-compose installed by chef only supports v2 of compose
+# this is a TODO
 version: "2"
 services:
 # # docker run -it --name machete --net=host --env-file machete1env.list ndlonmachete/debian:1.14.{build}
@@ -31,7 +33,7 @@ services:
     networks:  
       - machete-bridge
     volumes:
-      - "app-secrets:/app/certs"
+      - "/opt/machete/secrets:/app/certs"
     tty: true
     stdin_open: true
 # # docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=passw0rD!' --network bridge -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server
