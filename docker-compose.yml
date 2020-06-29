@@ -16,17 +16,8 @@ services:
       - SYS_ADMIN
     env_file: "./azurefuseenv.list"
     volumes: 
-      - "sql-database-backups:/backups"
-# # we don't want this on prod:
-  azurefuse_restore:
-    image: "ndlonmachete/azure-storage-fuse:0.0.2"
-    tty: true
-    stdin_open: true
-    networks:  
-      - machete-bridge
-    env_file: "./azurefuseenv_restore.list"
-    volumes: 
-      - "sql-database-restore:/backups"
+      - "/opt/machete/sqlbackup:/opt/sqlbackup"
+      - "/opt/machete/sqlrestore:/opt/sqlrestore"
   machete:
     image: "ndlonmachete/debian:1.14.267"
     env_file: "./machete1env.list"
@@ -57,9 +48,9 @@ services:
     ports:
       - 1433:1433
     volumes: 
-      - "sql-databases:/var/opt/mssql/data"
-      - "app-secrets:/var/opt/mssql/certs"
-      - "sql-database-backups:/var/opt/mssql/backups"
+      - "/opt/machete/sqlbackup:/var/opt/mssql/backups"
+      - "/opt/machete/sqldata:/var/opt/mssql/data"
+      - "/opt/machete/secrets:/var/opt/mssql/certs"
 networks:
   machete-bridge:
     driver: bridge

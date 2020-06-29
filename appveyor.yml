@@ -20,7 +20,7 @@ environment:
 
 build_script:
   - sh: docker build -f ./base/Dockerfile -t ndlonmachete/debian-base:0.1.13 ./base
-  - sh: docker build -f ./backups/Dockerfile -t ndlonmachete/azure-storage-fuse:0.0.2 ./backups
+  - sh: docker build -f ./backups/Dockerfile -t ndlonmachete/azure-storage-fuse:0.0.3 ./backups
   - sh: docker images
 
 # "secure variables are not decrypted for pull request builds"

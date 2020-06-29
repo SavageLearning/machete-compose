@@ -11,8 +11,13 @@ RUN apt-get update && apt-get install --no-install-recommends -yq wget ca-certif
  && apt-get clean -y \
  && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/* \
- && mkdir /mnt/blobfusetmp \
- && mkdir -p /mount/backups
+ && mkdir -p /mnt/blobfusetmp/prod \
+ && mkdir /mnt/blobfusetmp/test \
+ && mkdir -p /mount/prod \
+ && mkdir /mount/test
+
+COPY azurefuse.sh /opt
+WORKDIR /opt
 
 # start app
 CMD "/bin/bash"
