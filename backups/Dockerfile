@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install --no-install-recommends -yq wget ca-certif
  && dpkg -i packages-microsoft-prod.deb \
  && apt-get update \
  && apt-get install -y blobfuse \
- && apt-get remove -y wget \
+# && apt-get remove -y wget \
  && apt-get clean -y \
  && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/* \
