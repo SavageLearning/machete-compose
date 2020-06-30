@@ -27,5 +27,5 @@ build_script:
 after_build:
   - sh: docker login -u chaim1221 -p ${DOCKER_PASSWORD}
 #  - sh:  if [ $? -eq 0 ]; then docker push ndlonmachete/debian-base:$APPVEYOR_BUILD_VERSION; fi
-  - sh: docker push ndlonmachete/azure-storage-fuse:$(cat ./backups/azurefuse_version)
+#  - sh: docker push ndlonmachete/azure-storage-fuse:$(cat ./backups/azurefuse_version)
 # yeah, yeah, needs work, etc.
