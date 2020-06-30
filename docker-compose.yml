@@ -6,15 +6,15 @@ services:
 # # --net=host is left over from the last configuration; this would be a change:
   azurefuse:
     image: "ndlonmachete/azure-storage-fuse:0.0.3"
-    tty: true
-    stdin_open: true
-    networks:  
-      - machete-bridge
-    devices: 
-      - '/dev/fuse:/dev/fuse'
     cap_add:
       - SYS_ADMIN
+    devices: 
+      - '/dev/fuse:/dev/fuse'
     env_file: "./azurefuseenv.list"
+    networks:  
+      - machete-bridge
+    stdin_open: true
+    tty: true
     volumes: 
       - "/opt/machete/sqlbackup:/opt/sqlbackup"
       - "/opt/machete/sqlrestore:/opt/sqlrestore"
@@ -23,10 +23,12 @@ services:
     env_file: "./machete1env.list"
     networks:  
       - machete-bridge
+    ports: 
+      - 443:443
+    stdin_open: true
+    tty: true
     volumes:
       - "/opt/machete/secrets:/app/certs"
-    tty: true
-    stdin_open: true
 # # docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=passw0rD!' --network bridge -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server
 # # https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash#pullandrun2017
 # # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-2017#persist
@@ -56,8 +58,8 @@ networks:
     driver: bridge
 # # https://docs.docker.com/storage/volumes/ <~ opts are under --mounts (type, source, destination, etc.)
 # # sql-databases opts 'src=/mnt/databases' <~ comment leftover from Chef, not sure if it really applies to anything
-volumes:
-  app-secrets: 
-  sql-database-backups: 
-  sql-database-restore: 
-  sql-databases: 
+# volumes:
+#   app-secrets: 
+#   sql-database-backups: 
+#   sql-database-restore: 
+#   sql-databases: 
