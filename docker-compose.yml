@@ -19,7 +19,7 @@ services:
       - "/opt/machete/sqlbackup:/opt/sqlbackup"
       - "/opt/machete/sqlrestore:/opt/sqlrestore"
   machete:
-    image: "ndlonmachete/debian:1.14.267"
+    image: "ndlonmachete/debian:1.14.285"
     env_file: "./machete1env.list"
     networks:  
       - machete-bridge
