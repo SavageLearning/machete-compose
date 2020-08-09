@@ -5,8 +5,7 @@ version: 0.1.{build}
 
 branches:
   only:
-    - master
-    - fix_pipeline
+    - trunk
 
 skip_tags: true
 
