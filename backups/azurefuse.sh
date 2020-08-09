@@ -1,0 +1,2 @@
+blobfuse /mount/prod/ --tmp-path=/mnt/blobfusetmp/prod/ -o allow_root -o nonempty -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120 --log-level=LOG_DEBUG --file-cache-timeout-in-seconds=120 --container-name=prod
+blobfuse /mount/test/ --tmp-path=/mnt/blobfusetmp/test/ -o allow_root -o nonempty -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120 --log-level=LOG_DEBUG --file-cache-timeout-in-seconds=120 --container-name=test
