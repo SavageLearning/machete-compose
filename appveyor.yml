@@ -25,5 +25,5 @@ build_script:
 # "secure variables are not decrypted for pull request builds"
 after_build:
   - sh: docker login -u chaim1221 -p ${DOCKER_PASSWORD}
-  - sh: docker push ndlonmachete/debian-base:$APPVEYOR_BUILD_VERSION
+  - sh: docker push ndlonmachete/debian-base:$(cat ./base/base_version)
   - sh: docker push ndlonmachete/azure-storage-fuse:$(cat ./backups/azurefuse_version)
