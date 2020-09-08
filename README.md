@@ -21,3 +21,6 @@ the machete dockerfile is located at https://github.com/SavageLearning/Machete/b
 
 #### docker-compose.yml
 the docker compose solution for machete deployments
+
+
+... there's a build, see appveyor.yml; versions must be manually bumped if you change something (`./container_name/name_version`)

@@ -18,7 +18,7 @@ environment:
     secure: N9RRZVl+qqgkpnnDWw2IF40PIFwcE9CC6txds30jgkl3f4T7JKYqjns9s+bHuFCM
 
 build_script:
-  - sh: docker build -f ./base/Dockerfile -t ndlonmachete/debian-base:0.1.13 ./base
+  - sh: docker build -f ./base/Dockerfile -t ndlonmachete/debian-base:$(cat ./base/base_version) ./base
   - sh: docker build -f ./backups/Dockerfile -t ndlonmachete/azure-storage-fuse:$(cat ./backups/azurefuse_version) ./backups
   - sh: docker images
 
