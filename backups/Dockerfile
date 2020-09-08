@@ -20,5 +20,5 @@ RUN apt-get update && apt-get install --no-install-recommends -yq wget ca-certif
 COPY azurefuse.sh /opt
 WORKDIR /opt
 
-# start app
+# manual azurefuse mount is still required
 CMD "/bin/bash"
