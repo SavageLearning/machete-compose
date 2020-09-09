@@ -3,10 +3,12 @@
 
 version: 0.1.{build}
 
+# only build the trunk branch
 branches:
   only:
     - trunk
 
+skip_branch_with_pr: true
 skip_tags: true
 
 max_jobs: 1

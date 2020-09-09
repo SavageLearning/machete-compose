@@ -1,5 +1,10 @@
 ## machete-containers
-dockerfiles for building machete images
+
+This solution contains:
+* a docker-compose file for building the machete environment in test and prod
+* dockerfiles for building machete images
+
+### Content Details
 
 #### base
 the base container for our custom images
@@ -22,5 +27,22 @@ the machete dockerfile is located at https://github.com/SavageLearning/Machete/b
 #### docker-compose.yml
 the docker compose solution for machete deployments
 
+#### appveyor.yml
+the build file, for appveyor. appveyor because that's what v1 use(d). needs to be updated. versions must be manually bumped if you change something (`./container_name/name_version`)
 
-... there's a build, see appveyor.yml; versions must be manually bumped if you change something (`./container_name/name_version`)
+
+
+### Local Build
+
+A local build should be able to test the functionality. However, you have to create the following paths:
+```
+mkdir -p /opt/machete/secrets
+mkdir -p /opt/machete/sqldata
+mkdir -p /opt/machete/sqlbackup/backup
+mkdir -p /opt/machete/sqlbackup/restore
+```
+
+For Mac, these paths "are not shared from OS X and are not known to Docker." So you will have to configure the shared paths from Docker -> Preferences... -> File Sharing.
+See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for more info.
+
+TODO: script
