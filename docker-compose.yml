@@ -2,24 +2,8 @@
 # this is a TODO
 version: "2"
 services:
-# # docker run -it --name machete --net=host --env-file machete1env.list ndlonmachete/debian:1.14.{build}
-# # --net=host is left over from the last configuration; this would be a change:
-  azurefuse:
-    image: "ndlonmachete/azure-storage-fuse:0.0.5"
-    cap_add:
-      - SYS_ADMIN
-    devices: 
-      - '/dev/fuse:/dev/fuse'
-    env_file: "./azurefuseenv.list"
-    networks:  
-      - machete-bridge
-    stdin_open: true
-    tty: true
-    volumes: 
-      - "/opt/machete/sqlbackup/backup:/opt/sqlbackup"
-      - "/opt/machete/sqlbackup/restore:/opt/sqlrestore"
   machete:
-    image: "ndlonmachete/debian:1.14.285"
+    image: "ndlonmachete/debian:1.14.323"
     env_file: "./machete1env.list"
     networks:  
       - machete-bridge
@@ -52,8 +36,3 @@ networks:
   machete-bridge:
     driver: bridge
 # # https://docs.docker.com/storage/volumes/ <~ opts are under --mounts (type, source, destination, etc.)
-# volumes:
-#   app-secrets: 
-#   sql-database-backups: 
-#   sql-database-restore: 
-#   sql-databases: 
