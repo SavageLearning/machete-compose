@@ -42,7 +42,9 @@ mkdir -p /opt/machete/sqlbackup/backup
 mkdir -p /opt/machete/sqlbackup/restore
 ```
 
+
+The `docker-compose.sh` script will do this for you in a local environment, but please don't use it on prodution. If you're unsure about how to use this solution in production,
+please contact the maintainer and wait for assistance.
+
 For Mac, these paths "are not shared from OS X and are not known to Docker." So you will have to configure the shared paths from Docker -> Preferences... -> File Sharing.
 See https://docs.docker.com/docker-for-mac/osxfs/#namespaces for more info.
-
-TODO: script

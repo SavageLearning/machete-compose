@@ -3,7 +3,7 @@
 version: "2"
 services:
   machete:
-    image: "ndlonmachete/debian:1.14.323"
+    image: "ndlonmachete/debian:1.14.332"
     env_file: "./machete1env.list"
     networks:  
       - machete-bridge
