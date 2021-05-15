@@ -20,12 +20,12 @@ environment:
     secure: N9RRZVl+qqgkpnnDWw2IF40PIFwcE9CC6txds30jgkl3f4T7JKYqjns9s+bHuFCM
 
 build_script:
-  - sh: docker build -f ./base/Dockerfile -t ndlonmachete/debian-base:$(cat ./base/base_version) ./base
+  - sh: docker build -f ./base/Dockerfile -t ndlonmachete/nginx-base:$(cat ./base/base_version) ./base
   - sh: docker build -f ./backups/Dockerfile -t ndlonmachete/azure-storage-fuse:$(cat ./backups/azurefuse_version) ./backups
   - sh: docker images
 
 # "secure variables are not decrypted for pull request builds"
 after_build:
   - sh: docker login -u chaim1221 -p ${DOCKER_PASSWORD}
-  - sh: docker push ndlonmachete/debian-base:$(cat ./base/base_version)
+  - sh: docker push ndlonmachete/nginx-base:$(cat ./base/base_version)
   - sh: docker push ndlonmachete/azure-storage-fuse:$(cat ./backups/azurefuse_version)
