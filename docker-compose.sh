@@ -5,6 +5,8 @@ if [ $EUID -ne 0 ]; then
   exit 1
 fi
 
+apt -y install docker-compose
+
 mkdir -p /opt/machete/secrets
 mkdir -p /opt/machete/sqldata
 mkdir -p /opt/machete/sqlbackup/backup

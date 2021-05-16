@@ -1,9 +1,8 @@
 # version of docker-compose installed by chef only supports v2 of compose
-# this is a TODO
 version: "2"
 services:
   machete:
-    image: "ndlonmachete/debian:1.14.332"
+    image: "ndlonmachete/debian:1.14.373"
     env_file: "./machete1env.list"
     networks:  
       - machete-bridge
