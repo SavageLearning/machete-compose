@@ -13,14 +13,11 @@ mkdir -p /opt/machete/sqldata
 mkdir -p /opt/machete/sqlbackup/backup
 mkdir -p /opt/machete/sqlbackup/restore
 
-chown $(logname): /opt/machete/secrets
-chown $(logname): /opt/machete/sqldata
-chown -R $(logname): /opt/machete/sqlbackup
-
 if [[ ! -f /opt/machete/secrets/appsettings.json ]]; then
   cp ./config/appsettings.json /opt/machete/secrets
 fi
 if [[ ! -f /opt/machete/secrets/server.crt ]]; then
+  # make a self-signed cert for testing
   openssl genrsa 2048 > server.key
   chmod 400 server.key
   openssl req -new -x509 -nodes -sha256 -days 365 -key server.key -out server.crt 
