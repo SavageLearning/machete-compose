@@ -21,6 +21,7 @@ services:
     environment:
       SA_PASSWORD: "passw0rD!"
       ACCEPT_EULA: "Y"
+      SQLSERVER_CERT_SECRET: "bigsecret"
 # # v2
     mem_limit: 5G
     networks:
