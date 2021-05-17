@@ -24,7 +24,7 @@ if [[ ! -f /opt/machete/secrets/server.crt ]]; then
   cp ./server.* /opt/machete/secrets
 fi
 
-docker-compose up --no-recreate -d
+docker-compose up -d
 
 # https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash#sapassword
 desired_sql_password=$(cat machete1env.list | grep SQLSERVER_SA_PASSWORD | cut -d\= -f2 | tr -d $'\n')
@@ -39,7 +39,7 @@ sed -i -e "s/bigsecret/${sqlserver_cert_secret}/" docker-compose.yml
 docker stop compose_sqlserver_1
 docker rm compose_sqlserver_1
 
-docker-compose up --no-recreate -d
+docker-compose up -d
 
 echo 'Finished executing machete-compose/docker-compose.sh. Output of docker container list:'
 docker ps -a
