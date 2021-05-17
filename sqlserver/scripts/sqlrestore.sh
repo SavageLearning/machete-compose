@@ -1,7 +1,4 @@
 #!/bin/bash
-sqlserver=$(docker container list | grep sqlserver | awk '{print $1}')
-
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 exec &>> /var/opt/mssql/certs/sqlrestore.log
 echo "$(TZ=UTC date)"
 echo "Starting restore:"
