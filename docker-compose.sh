@@ -19,11 +19,11 @@ chown -R $(logname): /opt/machete/sqlbackup
 
 cp ./config/appsettings.json /opt/machete/secrets
 if [[ ! -f server.crt ]]; then
-  openssl genrsa 2048 > host.key
-  chmod 400 host.key
-  openssl req -new -x509 -nodes -sha256 -days 365 -key host.key -out server.crt 
+  openssl genrsa 2048 > server.key
+  chmod 400 server.key
+  openssl req -new -x509 -nodes -sha256 -days 365 -key server.key -out server.crt 
 fi
-cp ./server.crt /opt/machete/secrets
+cp ./server.* /opt/machete/secrets
 
 docker-compose up -d
 
