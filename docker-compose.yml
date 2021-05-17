@@ -27,7 +27,7 @@ services:
       - machete-bridge
     ports:
       - 1433:1433
-      volumes: 
+    volumes: 
       - "/opt/machete/sqlbackup:/var/opt/mssql/backups"
       - "/opt/machete/sqldata:/var/opt/mssql/data"
       - "/opt/machete/secrets:/var/opt/mssql/certs"
