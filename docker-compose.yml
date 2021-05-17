@@ -17,7 +17,7 @@ services:
 # # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-2017#persist
 # # prod is on 2017-CU16-ubuntu at time of switch, this would be an upgrade
   sqlserver:
-    image: "ndlonmachete/sqlserver:0.0.6"
+    image: "ndlonmachete/sqlserver:0.0.7"
     environment:
       SA_PASSWORD: "passw0rD!"
       ACCEPT_EULA: "Y"
