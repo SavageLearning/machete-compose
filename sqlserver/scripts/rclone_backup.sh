@@ -1,17 +1,13 @@
 #!/bin/bash
 # to replace sqlbackup.sh after everything works as intented
-sqlserver_password=${1}
-sqlserver_certificate_secret=${2}
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-echo "$(TZ=UTC date)" >> /opt/machete/sqlbackup.log
-echo "Starting backup:" >> /opt/machete/sqlbackup.log
-deletestatus=$?
-sqlserver=$(docker container list | grep sqlserver | awk '{print $1}')
-if [ $deletestatus -ne 0 ]; then echo "ERROR $deletestatus at 'rclone_backup.sh' (deleting backups failed)" >> /opt/machete/sqlbackup.log; fi
-sudo docker exec ${sqlserver} /opt/mssql-tools/bin/sqlcmd 
-   -S localhost -U SA -P "${sqlserver_password}" 
-   -Q "
-OPEN MASTER KEY DECRYPTION BY PASSWORD = '${sqlserver_certificate_secret}';
+exec &>> /var/opt/mssql/certs/sqlbackup.log
+echo "$(TZ=UTC date)"
+echo "Starting backup:"
+
+/opt/mssql-tools/bin/sqlcmd 
+  -S localhost -U SA -P "${SA_PASSWORD}" 
+  -Q "
+OPEN MASTER KEY DECRYPTION BY PASSWORD = '${SQLSERVER_CERT_SECRET}';
 EXECUTE dbo.DatabaseBackup
 @Databases = 'USER_DATABASES',
 @Directory = '/var/opt/mssql/backups',
@@ -23,19 +19,20 @@ EXECUTE dbo.DatabaseBackup
 @EncryptionAlgorithm = 'AES_256',
 @ServerCertificate = 'sqlserver_backup_cert'
 CLOSE MASTER KEY;
-" >> /opt/machete/sqlbackup.log
+" >> /var/opt/mssql/certs/sqlrestore.log
 backupstatus=$?
-if [ $backupstatus -ne 0 ]; then echo "ERROR $backupstatus at 'rclone_backup.sh'" >> /opt/machete/sqlbackup.log; fi
+if [ $backupstatus -ne 0 ]; then echo
+    "ERROR $backupstatus at 'rclone_backup.sh'" >> /var/opt/mssql/certs/sqlbackup.log; fi
+
 echo "Creating the archive..."
-#docker exec -u 0 azurefuse sh -c "tar --remove-files -czvf /mount/backups/$(date -I).tar.gz /backups/*"
-tar --remove-files -czvf /opt/machete/sqlbackup/$(date -I).tar.gz /opt/machete/sqlbackup/*
+tar --remove-files -czvf /var/opt/mssql/backups/backup/$(date -I).tar.gz /var/opt/mssql/backups/backup/*
 # test without copying anything
-rclone copy /opt/machete/sqlbackup/$(date -I).tar.gz s3:machete-sqlserver-backups/mount/prod --dry-run
+rclone --config=rclone.conf copy /var/opt/mssql/backups/backup/$(date -I).tar.gz s3:machete-sqlserver-backups/mount/prod --dry-run
 rclonedryrunstatus=$?
-if [ $rclonedryrunstatus -ne 0 ]; then echo "ERROR $rclonedryrunstatus at rclone_backup.sh" >> /opt/machete/sqlbackup.log; fi
+if [ $rclonedryrunstatus -ne 0 ]; then echo "ERROR $rclonedryrunstatus at rclone_backup.sh" >> /var/opt/mssql/backups/backup.log; fi
 if [ $rclonedryrunstatus -eq 0 ]; then
-    #actually copy the backups
-    rclone copy /opt/machete/sqlbackup/$(date -I).tar.gz s3:machete-sqlserver-backups/mount/prod
-    #remove the backup from virt disk
-    rm -rf /opt/machete/sqlbackup/$(date -I).tar.gz
+  #actually copy the backups
+  rclone copy /var/opt/mssql/backups/backup/$(date -I).tar.gz s3:machete-sqlserver-backups/mount/prod
+  #remove the backup from container volume
+  rm -rf /var/opt/mssql/backups/backup/$(date -I).tar.gz
 fi
