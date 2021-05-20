@@ -23,7 +23,7 @@ services:
       SA_PASSWORD: "passw0rD!"
       SQLSERVER_CERT_SECRET: "bigsecret"
       AWS_ACCESS_KEY_ID: "aws_access_key_id"
-      AWS_ACCESS_KEY: "aws_access_key"
+      AWS_ACCESS_KEY: "aws_key"
 # # v2
     mem_limit: 5G
     networks:
