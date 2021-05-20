@@ -27,14 +27,18 @@ fi
 docker-compose up --no-recreate -d
 
 # https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash#sapassword
-desired_sql_password=$(cat machete1env.list | grep SQLSERVER_SA_PASSWORD | cut -d\= -f2 | tr -d $'\n')
-current_sql_password=$(cat docker-compose.yml | grep SA_PASSWORD\: | cut -d\" -f2 | sed s/\"// )
-sqlserver_cert_secret=$(cat machete1env.list | grep SQLSERVER_CERT_SECRET | cut -d\= -f2 | tr -d $'\n')
+current_sql_password=$(grep SA_PASSWORD: docker-compose.yml | cut -d\" -f2 | sed s/\"// )
+desired_sql_password=$(grep SQLSERVER_SA_PASSWORD machete1env.list | cut -d= -f2 | tr -d $'\n')
+sqlserver_cert_secret=$(grep SQLSERVER_CERT_SECRET machete1env.list | cut -d= -f2 | tr -d $'\n')
+aws_access_key_id=$(grep AWS_ACCESS_KEY_ID machete1env.list | cut -d= -f2 | tr -d $'\n')
+aws_access_key=$(grep AWS_ACCESS_KEY= machete1env.list | cut -d= -f2 | tr -d $'\n')
 sudo docker exec -it compose_sqlserver_1 /opt/mssql-tools/bin/sqlcmd \
    -S localhost -U SA -P "${current_sql_password}" \
    -Q "ALTER LOGIN SA WITH PASSWORD='${desired_sql_password}'"
 sed -i -e "s/${current_sql_password}/${desired_sql_password}/" docker-compose.yml
 sed -i -e "s/bigsecret/${sqlserver_cert_secret}/" docker-compose.yml
+sed -i -e "s/aws_access_key_id/${aws_access_key_id}/" docker-compose.yml
+sed -i -e "s/aws_access_key\"/${aws_access_key}\"/" docker-compose.yml
 
 docker stop compose_sqlserver_1
 docker rm compose_sqlserver_1
