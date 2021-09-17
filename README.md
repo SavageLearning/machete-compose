@@ -27,7 +27,7 @@ mkdir -p /opt/machete/sqlbackup/backup
 mkdir -p /opt/machete/sqlbackup/restore
 ```
 
-The `docker-compose.sh` script will do this for you in a local environment, but don't use it on prodution if there are already
+The `compose-machete.sh` script will do this for you in a local environment, but don't use it on prodution if there are already
  containers running. If you're unsure about how to use this solution in production, please contact the maintainer and wait
  for assistance.
 
