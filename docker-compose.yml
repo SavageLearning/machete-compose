@@ -13,7 +13,8 @@ services:
       - machete-bridge
   dotnet:
     env_file: "./env_variables.conf"
-    image: "ndlonmachete/debian:1.15.29"
+    container_name: machete_dotnet_1
+    image: "ndlonmachete/debian:1.15.31"
     networks:  
       - machete-bridge
     ports: 
@@ -26,6 +27,7 @@ services:
       - /opt/machete/secrets/appsettings.json:/app/api/appsettings.json
   sqlserver:
     env_file: "./env_variables.conf"
+    container_name: machete_sqlserver_1
     image: "mcr.microsoft.com/mssql/server:2017-latest"
     environment:
       ACCEPT_EULA: "Y"
