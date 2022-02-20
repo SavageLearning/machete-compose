@@ -1,2 +1,6 @@
 # secrets files
 *.list
+opt/
+server.crt
+server.key
+env_variables.conf

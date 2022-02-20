@@ -1,39 +1,49 @@
 # version of docker-compose installed by chef only supports v2 of compose
-version: "2"
+version: '2.0'
 services:
-  machete:
-    image: "ndlonmachete/debian:1.14.379"
-    env_file: "./machete1env.list"
+  nginx:
+    image: nginx:1.21.3
+    ports: 
+      - 443:443
+    volumes: 
+      - /opt/machete/config/nginx/conf.d/:/etc/nginx/conf.d/
+      - /opt/machete/secrets:/app/certs
+      - /opt/machete/logs/nginx:/app/api/logs
+    restart: always
+    networks:
+      - machete-bridge
+  dotnet:
+    env_file: "./env_variables.conf"
+    container_name: machete_dotnet_1
+    image: "ndlonmachete/debian"
     networks:  
       - machete-bridge
     ports: 
-      - 443:443
+      - 127.0.0.1:4213:4213
     stdin_open: true
     tty: true
     volumes:
+      - "/opt/machete/logs:/app/logs"
       - "/opt/machete/secrets:/app/certs"
-# # docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=passw0rD!' --network bridge -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server
-# # https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash#pullandrun2017
-# # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-docker?view=sql-server-2017#persist
-# # prod is on 2017-CU16-ubuntu at time of switch, this would be an upgrade
+      - /opt/machete/secrets/appsettings.json:/app/api/appsettings.json
+    restart: always
   sqlserver:
-    image: "ndlonmachete/sqlserver:0.0.9"
+    env_file: "./env_variables.conf"
+    container_name: machete_sqlserver_1
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "passw0rD!"
-      SQLSERVER_CERT_SECRET: "bigsecret"
-      AWS_ACCESS_KEY_ID: "aws_access_key_id"
-      AWS_ACCESS_KEY: "aws_key"
-# # v2
     mem_limit: 5G
     networks:
       - machete-bridge
     ports:
       - 127.0.0.1:1433:1433
+      - 10.0.0.42:1433:1433
     volumes: 
       - "/opt/machete/sqlbackup:/var/opt/mssql/backups"
       - "/opt/machete/sqldata:/var/opt/mssql/data"
       - "/opt/machete/secrets:/var/opt/mssql/certs"
+    restart: always
 networks:
   machete-bridge:
     driver: bridge
