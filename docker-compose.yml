@@ -14,7 +14,7 @@ services:
   dotnet:
     env_file: "./env_variables.conf"
     container_name: machete_dotnet_1
-    image: "ndlonmachete/debian:1.15.31"
+    image: "ndlonmachete/debian"
     networks:  
       - machete-bridge
     ports: 
@@ -36,6 +36,7 @@ services:
       - machete-bridge
     ports:
       - 127.0.0.1:1433:1433
+      - 10.0.0.42:1433:1433
     volumes: 
       - "/opt/machete/sqlbackup:/var/opt/mssql/backups"
       - "/opt/machete/sqldata:/var/opt/mssql/data"
