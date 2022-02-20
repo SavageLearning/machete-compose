@@ -9,6 +9,7 @@ services:
       - /opt/machete/config/nginx/conf.d/:/etc/nginx/conf.d/
       - /opt/machete/secrets:/app/certs
       - /opt/machete/logs/nginx:/app/api/logs
+    restart: always
     networks:
       - machete-bridge
   dotnet:
@@ -25,6 +26,7 @@ services:
       - "/opt/machete/logs:/app/logs"
       - "/opt/machete/secrets:/app/certs"
       - /opt/machete/secrets/appsettings.json:/app/api/appsettings.json
+    restart: always
   sqlserver:
     env_file: "./env_variables.conf"
     container_name: machete_sqlserver_1
@@ -41,6 +43,7 @@ services:
       - "/opt/machete/sqlbackup:/var/opt/mssql/backups"
       - "/opt/machete/sqldata:/var/opt/mssql/data"
       - "/opt/machete/secrets:/var/opt/mssql/certs"
+    restart: always
 networks:
   machete-bridge:
     driver: bridge
