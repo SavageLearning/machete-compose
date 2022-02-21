@@ -1,19 +1,20 @@
-#!/bin/bash
-exec &>> /var/opt/mssql/certs/sqlrestore.log
+#!/bin/bash 
+set -ex
 echo "$(TZ=UTC date)"
 echo "Starting restore:"
 
-# clear the old backups and download new ones - save, belongs to Esteban (emergency May 2021)
-# rm -rf /opt/machete/sqlbackup/restore/*
+rm -rf /opt/machete/sqlbackup/restore/*
+BACKUPFILE="$(date -I).tar"
+az storage blob download -c prod --account-name machetebackup --name $BACKUPFILE --file $BACKUPFILE
 # rclone copy s3:machete-sqlserver-backups/mount/prod/$(date -I).tar.gz /opt/machete/sqlbackup/restore/
-# tar -xzvf /opt/machete/sqlbackup/restore/$(date -I).tar.gz -C /var/lib/docker/volumes/sql-database-backups/_data/
+tar -xzvf /opt/machete/sqlbackup/restore/$BACKUPFILE -C /var/lib/docker/volumes/sql-database-backups/_data/
 
 # should contain a single directory with the olabackupid:
 restore_directory="/var/opt/mssql/backups/restore"
 olabackupid=$(ls ${restore_directory})
 existingbackups=$(find ${restore_directory}/${olabackupid} | grep bak)
 db_names=$(find ${restore_directory}/${olabackupid} | grep bak | cut -d\/ -f10 | cut -d_ -f2,3)
-
+exit 0
 sqlrestore() {
   db=$1
   filename=$2
