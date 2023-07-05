@@ -2,9 +2,14 @@
 version: '2.0'
 services:
   nginx:
-    image: nginx:1.21.3
+    image: nginx:1.25.1
     ports: 
-      - 443:443
+      - 185.165.170.131:443:443
+      - 127.0.0.1:443:443
+      - 10.0.0.117:443:443
+      - 185.165.170.131:80:80
+      - 127.0.0.1:80:80
+      - 10.0.0.117:80:80
     volumes: 
       - /opt/machete/config/nginx/conf.d/:/etc/nginx/conf.d/
       - /opt/machete/secrets:/app/certs
@@ -15,7 +20,7 @@ services:
   dotnet:
     env_file: "./env_variables.conf"
     container_name: machete_dotnet_1
-    image: "ndlonmachete/debian"
+    image: "ndlonmachete/debian:1.15.52"
     networks:  
       - machete-bridge
     ports: 
@@ -38,7 +43,7 @@ services:
       - machete-bridge
     ports:
       - 127.0.0.1:1433:1433
-      - 10.0.0.42:1433:1433
+      - 10.0.0.117:1433:1433
     volumes: 
       - "/opt/machete/sqlbackup:/var/opt/mssql/backups"
       - "/opt/machete/sqldata:/var/opt/mssql/data"

@@ -3,22 +3,22 @@ set -ex
 echo "$(TZ=UTC date)"
 echo "Starting restore:"
 
-rm -rf /opt/machete/sqlbackup/restore/*
-BACKUPFILE="$(date -I).tar"
-az storage blob download -c prod --account-name machetebackup --name $BACKUPFILE --file $BACKUPFILE
+#rm -rf /opt/machete/sqlbackup/restore/*
+#BACKUPFILE="$(date -I).tar"
+BACKUPFILE="2023-07-02.tar"
+#az storage blob download -c prod --account-name machetebackup --name $BACKUPFILE --file $BACKUPFILE
 # rclone copy s3:machete-sqlserver-backups/mount/prod/$(date -I).tar.gz /opt/machete/sqlbackup/restore/
-tar -xzvf /opt/machete/sqlbackup/restore/$BACKUPFILE -C /var/lib/docker/volumes/sql-database-backups/_data/
+#tar -xvf /opt/machete/sqlbackup/restore/$BACKUPFILE -C /opt/machete/sqlbackup/restore --strip-components=6
 
 # should contain a single directory with the olabackupid:
-restore_directory="/var/opt/mssql/backups/restore"
-olabackupid=$(ls ${restore_directory})
-existingbackups=$(find ${restore_directory}/${olabackupid} | grep bak)
-db_names=$(find ${restore_directory}/${olabackupid} | grep bak | cut -d\/ -f10 | cut -d_ -f2,3)
-exit 0
+restore_directory="/opt/machete/sqlbackup/restore"
+olabackupid=$(cd  ${restore_directory} && ls -d */)
+existingbackups=$(find ${restore_directory}/${olabackupid}  | grep bak)
+db_names=$(find ${restore_directory}/${olabackupid} -type f -name "*.bak" -exec basename {} \;)
 sqlrestore() {
   db=$1
   filename=$2
-  /opt/mssql-tools/bin/sqlcmd \
+  sudo docker exec machete_sqlserver_1 /opt/mssql-tools/bin/sqlcmd \
     -S localhost -U SA -P "${SA_PASSWORD}" \
     -Q "
     OPEN MASTER KEY DECRYPTION BY PASSWORD = '${SQLSERVER_CERT_SECRET}';
@@ -32,6 +32,7 @@ sqlrestore() {
 }
 for database in $db_names
 do
-  backupfilename=$(printf '%s\n' "${existingbackups[@]}" | grep $database)
-  sqlrestore $database $backupfilename
+  backupfilename="/var/opt/mssql/backups/restore/${olabackupid}${database}"
+  shortdbname=$(echo $database | sed -E 's/.{12,12}_([[:alnum:]_]+)_FULL_.*/\1/')
+  sqlrestore $shortdbname $backupfilename
 done
